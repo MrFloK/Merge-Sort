@@ -1,30 +1,45 @@
 package Mergesort;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class Spielwiese {
 
     public static void main(String[] args) {
 
+        //Erstellen der Stopuhren für die SOrteirverfahren -klassisch und 2 Threads
         Stopwatch t1 = new Stopwatch();
         Stopwatch t2 = new Stopwatch();
 
+        //Scannereingabe für benutzerdefinierte Werte
         System.out.println("Wie groß soll das Array werden ?");
         Scanner sc = new Scanner(System.in);
-        int input = sc.nextInt();
+        int inputlength = sc.nextInt();
         System.out.println("Wie groß sollen die Zahlen werden ?");
-        int input2 = sc.nextInt();
+        int inputrange = sc.nextInt();
         System.out.println("Soll das Array angezeigt werden ?");
         boolean input3 = sc.nextBoolean();
         sc.close();
 
+        //Stopuhr starten
         t1.starte();
 
+
+
         //Unsortierte Liste erstellen => befüllen mit zufälligen Zahlen
-        int [] unsortedList = new int[input];
-        for (int i = 0; i < unsortedList.length;i++ ) {
-            int random = (int) (Math.random()*input2); //Java Zufallszahlen auf int casten
-            unsortedList[i] = random;
-        }
+        int [] unsortedList = new int[inputlength];
+
+
+
+        unsortedList = Arrays.stream(unsortedList)
+                .map(randomnumber -> (int) (Math.random()*inputrange))
+                .toArray();
+
+        //Arrays.stream(unsortedList).forEach(number -> System.out.println(number));
 
         int [] sortedList = new int[unsortedList.length];
             //Einfacher Weg
@@ -34,9 +49,8 @@ public class Spielwiese {
         //Ausgabe
         if (input3) {
             System.out.println("\nEndprodukt eines Threads: ");
-            for (int part : sortedList) {
-                System.out.println(part);
-            }
+            Arrays.stream(sortedList)
+                    .forEach(number -> System.out.println(number));
         }
 
         //Stoppe Stopuhr
@@ -45,6 +59,7 @@ public class Spielwiese {
         //Start der zwei Thread Programmierung
         t2.starte();
 
+        //Manuelles spalten der Listen
         int listLength = unsortedList.length;
         double listLengthDouble = listLength;
         double halfListLength = listLengthDouble / 2;
@@ -59,6 +74,16 @@ public class Spielwiese {
             }
         }
 
+        int counter = 0;
+
+        //left[i] = Arrays.stream(unsortedList)
+                //.forEach(number ->  < number ? number : );
+
+        //right = Arrays.stream(unsortedList)
+        //        .
+
+
+        //Thread initialisieren und starten
         ThreadClass firstThread = new ThreadClass(left);
         ThreadClass secondThread = new ThreadClass(right);
 
@@ -69,6 +94,7 @@ public class Spielwiese {
         leftThread.start();
         rightThread.start();
 
+        //sichergehen, dass beide Threads erst durchgelaufen sind, bevor Main weitergeht
         try {
             leftThread.join();
             rightThread.join();
@@ -77,6 +103,7 @@ public class Spielwiese {
         }
 
 
+        //2 seperate Listen wieder zusammensetzen
         int[] sortedleft = new int[(int) Math.floor(halfListLength)];
         int[] sortedright = new int[(int) Math.ceil(halfListLength)];
 
@@ -89,14 +116,13 @@ public class Spielwiese {
 
         if (input3) {
             System.out.println("\nEndprodukt Zwei Threads: ");
-            for (int part : sortedListThread) {
-                System.out.println(part);
-            }
+            Arrays.stream(sortedListThread).forEach(numbers -> System.out.println(numbers));
         }
 
         //Stoppe Stopuhr
         t2.stoppe();
 
+        //Ausgabe der Stopuhren
         System.out.println("\nZeit mit einem Thread: " + t1.lies() + " ms." );
         System.out.println("\nZeit mit zwei Threads: " + t2.lies() + " ms.");
 
