@@ -1,28 +1,21 @@
 package Mergesort;
 
+import java.util.Arrays;
+
 public class NormalWay {
 
     public static int[] split (int[] unsortedList) {
 
-        //WEnn Liste nur noch 1 Element enthält, Abbruchbedingung
+        //Abbruchbedingung -> Wenn Liste nur noch 1 Element enthält
         if (unsortedList.length == 1 )  {
             return unsortedList;
         }
 
-        //LIste aufteilen
-        int listLength = unsortedList.length;
-        double listLengthDouble = listLength;
-        double halfListLength = listLengthDouble / 2;
-
-        int[] left = new int[(int) Math.floor(halfListLength)];
-        int[] right = new int[(int) Math.ceil(halfListLength)];
-        for (int i = 0; i < unsortedList.length; i++)   {
-            if(i < (int) Math.floor(halfListLength)) {
-                left[i] = unsortedList[i];
-                } else {
-                    right[i - (int) Math.floor(halfListLength)] = unsortedList [i];
-            }
-        }
+        //Liste aufteilen
+        int[] left;
+        int[] right;
+        left = Arrays.copyOfRange(unsortedList, 0, unsortedList.length/2);
+        right = Arrays.copyOfRange(unsortedList, left.length,unsortedList.length );
 
             //mit geteilter Liste Rekursion ausführen
             left = split(left);
